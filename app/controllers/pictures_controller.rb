@@ -2,6 +2,52 @@ class PicturesController < ApplicationController
 
     def index
         @pictures = Picture.all
-        render json: (@pictures)
+        render json: PictureSerializer.new(@pictures)
+    end
+    
+
+    def show 
+        picture = Picture.find(params[:id])
+        if picture
+            render json: picture, only: [:id, :image_url, :description],
+            include: [reviews], only: [:comment]
+          else
+          render json: {message: "review does not exist"}
+        end
+    end 
+
+    def create 
+        picture = current_user.pictures.new(picture_params)
+
+        if picture.save
+          render json: serializer(picture)
+        else
+          render json: errors(picture), status: 422
+        end
+    end
+
+    def update
+        if @picture.update(picture_params)
+          render json: @picture
+        else
+          render json: @picture.errors, status: :unprocessable_entity
+        end
+      end
+    
+      # DELETE /drinks/1
+      def destroy
+        @picture.destroy
+      end
+    
+    
+    private
+
+
+    def picture_params 
+        params.require(:picture).permit(:image_url, :description, :user_id)
     end
 end
+
+
+
+
