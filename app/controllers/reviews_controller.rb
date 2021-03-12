@@ -17,15 +17,15 @@ class ReviewsController < ApplicationController
         end
       end
 
-      def destroy
-        review = current_user.reviews.find(params[:id])
+      # def destroy
+      #   review = current_user.reviews.find(params[:id])
 
-        if review.destroy
-          head :no_content
-        else
-          render json: errors(review), status: 422
-        end
-      end
+      #   if review.destroy
+      #     head :no_content
+      #   else
+      #     render json: errors(review), status: 422
+      #   end
+      # end
 
       private
 

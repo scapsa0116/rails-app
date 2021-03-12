@@ -2,19 +2,33 @@ class PicturesController < ApplicationController
 
     def index
         @pictures = Picture.all
-        render json: PictureSerializer.new(@pictures)
+        render json: PictureSerializer.new(@pictures).serializable_hash[:data].map{|hash| hash[:attributes]}
+        
+    end
+
+
+    def show
+      @picture = Picture.find(params[:id])
+      # render json: PictureSerializer.new(@picture, include: [:reviews])
+      hash = PictureSerializer.new(@picture, include: [:reviews]).serializable_hash
+      render json: {
+        picture: hash[:data][:attributes],
+        reviews: hash[:included].map{|review| review[:attributes]}
+      }
     end
     
+    
 
-    def show 
-        picture = Picture.find(params[:id])
-        if picture
-            render json: picture, only: [:id, :image_url, :description],
-            include: [reviews], only: [:comment]
-          else
-          render json: {message: "review does not exist"}
-        end
-    end 
+    # def show 
+    #     
+    #     # render json: GroupSerializer.new(@group, include: [:events])
+    #     if picture
+    #         render json: picture, only: [:id, :image_url, :description],
+    #         include: [reviews], only: [:comment]
+    #       else
+    #       render json: {message: "review does not exist"}
+    #     end
+    # end 
 
     def create 
         picture = current_user.pictures.new(picture_params)
@@ -35,9 +49,9 @@ class PicturesController < ApplicationController
       end
     
       # DELETE /drinks/1
-      def destroy
-        @picture.destroy
-      end
+      # def destroy
+      #   picture.destroy
+      # end
     
     
     private
