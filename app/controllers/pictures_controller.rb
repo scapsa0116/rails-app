@@ -5,6 +5,10 @@ class PicturesController < ApplicationController
         render json: PictureSerializer.new(@pictures).serializable_hash[:data].map{|hash| hash[:attributes]}
         
     end
+    # def index
+    #   @pictures = Picture.all
+    #   render json: PictureSerializer.new(@pictures)
+    # end
 
 
     def show
@@ -20,7 +24,7 @@ class PicturesController < ApplicationController
     
 
     # def show 
-    #     
+    #     @picture = Picture.find(params[:id])
     #     # render json: GroupSerializer.new(@group, include: [:events])
     #     if picture
     #         render json: picture, only: [:id, :image_url, :description],

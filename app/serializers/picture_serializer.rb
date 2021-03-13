@@ -6,4 +6,8 @@ class PictureSerializer
   attribute :user_name do |picture|
     picture.user.name  
   end
+
+  # attribute :reviews_desc do |picture|
+  #   picture.reviews.comment
+  # end
 end
