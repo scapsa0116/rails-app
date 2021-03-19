@@ -2,7 +2,10 @@ class ReviewsController < ApplicationController
 
     def index  
         @reviews = Review.all 
-        render json: @reviews
+        # render json: @reviews
+       # render json: PictureSerializer.new(@picture, include: [:reviews])
+        render json: ReviewSerializer.new(@reviews).serializable_hash[:data].map{|hash| hash[:attributes]}
+
     end
 
     
