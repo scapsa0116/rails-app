@@ -9,22 +9,22 @@ class UsersController < ApplicationController
     def show
         @user = User.find(params[:id])
         # render json: PictureSerializer.new(@picture, include: [:reviews])
-        # hash = UserSerializer.new(@user, include: [:pictures]).serializable_hash
-        # render json: {
-        #   user: hash[:data][:attributes],
-        #   pictures: hash[:include].map{|picture| picture[:attribute]},
+        hash = UserSerializer.new(@user, include: [:pictures]).serializable_hash
+        render json: {
+          user: hash[:data][:attributes],
+          pictures: hash[:included].map{|picture| picture[:attributes]},
         # #   reviews: hash[:included].map{|review| review[:attributes]}
-        # }
+           }
 
-        render json: @user.to_json(only: [:name, :id],
-        include: [pictures: {only: [:image_url, :description]}])
+        # render json: @user.to_json(only: [:name, :id],
+        # include: [pictures: {only: [:image_url, :description]}])
       end
 
       private
 
 
     def user_params 
-        params.require(:user).permit(:name)
+        params.require(:user).permit(:name, :id)
     end
 end
 
