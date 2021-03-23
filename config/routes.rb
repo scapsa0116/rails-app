@@ -3,6 +3,12 @@ Rails.application.routes.draw do
 root 'pictures#index'
   resources :users
   resources :reviews 
+
+  resources :users do 
+    resources :pictures
+  end
+
+  
   
   resources :pictures do
     resources :reviews 

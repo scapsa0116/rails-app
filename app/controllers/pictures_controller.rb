@@ -37,6 +37,7 @@ class PicturesController < ApplicationController
     def create 
         picture = current_user.pictures.new(picture_params)
 
+
         if picture.save
           render json: serializer(picture)
         else
