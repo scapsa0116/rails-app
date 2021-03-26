@@ -1,14 +1,33 @@
 class PicturesController < ApplicationController
+#  before_action :set_picture, only: [:show, :update, :destroy]
 
     def index
-        @pictures = Picture.all
-        render json: PictureSerializer.new(@pictures).serializable_hash[:data].map{|hash| hash[:attributes]}
+    
+        # @pictures = Picture.all
+      
+        # render json: PictureSerializer.new(@pictures).serializable_hash[:data].map{|hash| hash[:attributes]}
+        if logged_in?
+          @pictures = current_user.pictures
+          render json: @pictures, status: :ok
+        else
+          render json: {
+            error: "not logged in", status: :unauthorized
+          }
+        end
         
     end
-    # def index
-    #   @pictures = Picture.all
-    #   render json: PictureSerializer.new(@pictures)
-    # end
+
+    def home 
+      if logged_in?
+        @pictures = current_user.pictures
+        render json: PictureSerializer.new(@pictures).serializable_hash[:data].map{|hash| hash[:attributes]}, status: :ok
+      else
+        render json: {
+          error: "not logged in", status: :unauthorized
+        }
+      end
+    end 
+
 
 
     def show
@@ -36,8 +55,6 @@ class PicturesController < ApplicationController
 
     def create 
         picture = current_user.pictures.new(picture_params)
-
-
         if picture.save
           render json: serializer(picture)
         else

@@ -3,6 +3,16 @@ Rails.application.routes.draw do
 root 'pictures#index'
   resources :users
   resources :reviews 
+  resources :pictures
+  resources :sessions, only: [:create, :destroy]
+  # get '/auth/:provider/callback' => 'sessions#create'
+  # get "/login", to: redirect("/auth/google_oauth2")
+  # get "logout", to: "sessions#destroy"
+
+  post '/login', to: 'sessions#create'
+  delete '/logout', to: 'sessions#destroy'
+  get '/get_current_user', to: 'sessions#get_current_user'
+  
 
   resources :users do 
     resources :pictures

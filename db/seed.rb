@@ -5,6 +5,7 @@ Review.destroy_all
 juan = User.create(
     {
     name: "Juan",
+    email: "juan@gmail.com",
     password: "juan"
     }
 )
@@ -12,6 +13,7 @@ juan = User.create(
 stela = User.create(
     {
         name: "Stela",
+        email: "stela@gmail.com",
         password: "stela"
     }
 )
