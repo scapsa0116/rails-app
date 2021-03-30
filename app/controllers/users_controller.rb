@@ -1,8 +1,16 @@
 class UsersController < ApplicationController
 
     def index 
-        @users = User.all
-        render json: UserSerializer.new(@users).serializable_hash[:data].map{|hash| hash[:attributes]}
+        # @users = User.all
+        # render json: UserSerializer.new(@users).serializable_hash[:data].map{|hash| hash[:attributes]}
+        if logged_in?
+          @pictures = current_user.pictures
+          render json: @pictures, status: :ok
+        else
+          render json: {
+            error: "not logged in", status: :unauthorized
+          }
+        end
 
     end 
 

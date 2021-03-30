@@ -3,29 +3,30 @@ class PicturesController < ApplicationController
 
     def index
     
-        # @pictures = Picture.all
+        @pictures = Picture.all
       
-        # render json: PictureSerializer.new(@pictures).serializable_hash[:data].map{|hash| hash[:attributes]}
-        if logged_in?
-          @pictures = current_user.pictures
-          render json: @pictures, status: :ok
-        else
-          render json: {
-            error: "not logged in", status: :unauthorized
-          }
-        end
+        render json: PictureSerializer.new(@pictures).serializable_hash[:data].map{|hash| hash[:attributes]}
+        # if logged_in?
+        #   @pictures = current_user.pictures
+        #   render json: @pictures, status: :ok
+        # else
+        #   render json: {
+        #     error: "not logged in", status: :unauthorized
+        #   }
+        # end
         
     end
 
     def home 
       if logged_in?
         @pictures = current_user.pictures
-        render json: PictureSerializer.new(@pictures).serializable_hash[:data].map{|hash| hash[:attributes]}, status: :ok
+        render json: @pictures, status: :ok
       else
         render json: {
           error: "not logged in", status: :unauthorized
         }
       end
+      
     end 
 
 

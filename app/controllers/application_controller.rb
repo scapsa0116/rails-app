@@ -9,7 +9,7 @@ class ApplicationController < ActionController::API
   end
 
     def current_user
-        @current_user ||= User.find_by(id: decode_token_and_get_user_id)
+        @current_user ||= User.find_by(id: JWT.decode(request.headers["Authorization"], "beans")[0]["id"])
       end
 
     
@@ -24,9 +24,7 @@ class ApplicationController < ActionController::API
       end
 
 
-      def decode_token_and_get_user_id
-        JWT.decode(request.headers["Authorization"], "beans")[0]["id"]
-      end 
+      
 
 end
 
