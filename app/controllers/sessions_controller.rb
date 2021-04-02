@@ -2,14 +2,14 @@ class SessionsController < ApplicationController
     
 
     def create
-        # binding.pry
       @user = User.find_by(email: params[:user][:email])
       if @user && @user.authenticate(params[:user][:password])
-        token = generate_token({id: @user.id})
+
+         session[:user_id] = @user.id
+
 
         resp = {
-          user: user_serializer(@user),
-          jwt: token
+          user: @user.user_serializer
         }
         render json: resp
       else
@@ -22,19 +22,28 @@ class SessionsController < ApplicationController
     end
 
     def destroy
-      session[:user_id] = nil
-      redirect_to root_url, notice: "Logged out!"
+      if session.clear
+      render json: {
+        message: "succesfuly logged out"
+      }, status: :ok
+      else 
+        render json: { 
+         error: "something Went Wrong"
+        }, status: 500
     end
+  end
 
 
 
 def get_current_user
   if logged_in?
   render json: {
-    user: user_serializer(current_user)
+    user: current_user.user_serializer
     }, status: :ok
   else
     render json: {error: "No current user"}
   end
  end
+
+
 end
