@@ -2,25 +2,15 @@ class PicturesController < ApplicationController
 #  before_action :set_picture, only: [:show, :update, :destroy]
 
     def index
-    
         @pictures = Picture.all
-      
-        render json: PictureSerializer.new(@pictures).serializable_hash[:data].map{|hash| hash[:attributes]}
-        # if logged_in?
-        #   @pictures = current_user.pictures
-        #   render json: @pictures, status: :ok
-        # else
-        #   render json: {
-        #     error: "not logged in", status: :unauthorized
-        #   }
-        # end
-        
+        render json: PictureSerializer.new(@pictures).serializable_hash[:data].map{|hash| hash[:attributes]}        
     end
 
     def home 
       if logged_in?
         @pictures = current_user.pictures
-        render json: @pictures, status: :ok
+        render json: PictureSerializer.new(@pictures).serializable_hash[:data].map{|hash| hash[:attributes]}        
+
       else
         render json: {
           error: "not logged in", status: :unauthorized
@@ -39,6 +29,13 @@ class PicturesController < ApplicationController
         picture: hash[:data][:attributes],
         reviews: hash[:included].map{|review| review[:attributes]}
       }
+      # hash = PictureSerializer.new(@picture, include: [:reviews]).serializable_hash
+      # render json: {
+      #   id: hash[:data][:attributes][:id],
+      #   image_url: hash[:data][:attributes][:image_url],
+      #   description: hash[:data][:attributes][:description]
+      #   reviews: hash[:included].map{|review| review[:attribute]}
+      # }
     end
     
     
@@ -55,13 +52,15 @@ class PicturesController < ApplicationController
     # end 
 
     def create 
-        picture = current_user.pictures.new(picture_params)
-        if picture.save
-          render json: serializer(picture)
+        @picture = current_user.pictures.build(picture_params)
+        if @picture.save
+          render json: PictureSerializer.new(@picture).serializable_hash[:data][:attributes], status: :created        
+
         else
-          render json: errors(picture), status: 422
+          render json: @picture.errors, status: :unprocessable_entity
         end
     end
+    
 
     def update
         if @picture.update(picture_params)
@@ -81,7 +80,7 @@ class PicturesController < ApplicationController
 
 
     def picture_params 
-        params.require(:picture).permit(:image_url, :description, :user_id)
+        params.require(:picture).permit(:image, :description, :user_id)
     end
 end
 
