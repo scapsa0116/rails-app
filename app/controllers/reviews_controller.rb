@@ -11,14 +11,19 @@ class ReviewsController < ApplicationController
     
 
     def create
-        review = current_user.reviews.new(review_params)
+        @review = current_user.reviews.build(review_params)
 
-        if review.save
-          render json: serializer(review)
+        if @review.save
+          render json: ReviewSerializer.new(@review).serializable_hash[:data][:attributes], status: :created
         else
-          render json: errors(review), status: 422
+          render json: @review.errors, status: :unprocessable_entity
         end
+
       end
+
+      
+     
+
 
       # def destroy
       #   review = current_user.reviews.find(params[:id])
