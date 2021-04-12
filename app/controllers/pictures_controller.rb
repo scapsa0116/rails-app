@@ -29,13 +29,7 @@ class PicturesController < ApplicationController
         picture: hash[:data][:attributes],
         reviews: hash[:included].map{|review| review[:attributes]}
       }
-      # hash = PictureSerializer.new(@picture, include: [:reviews]).serializable_hash
-      # render json: {
-      #   id: hash[:data][:attributes][:id],
-      #   image_url: hash[:data][:attributes][:image_url],
-      #   description: hash[:data][:attributes][:description]
-      #   reviews: hash[:included].map{|review| review[:attribute]}
-      # }
+      
     end
     
     
