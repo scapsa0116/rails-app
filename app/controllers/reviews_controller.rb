@@ -1,10 +1,16 @@
 class ReviewsController < ApplicationController
 
-    def index  
+    def index 
+      if logged_in? 
         @reviews = Review.all 
         # render json: @reviews
        # render json: PictureSerializer.new(@picture, include: [:reviews])
         render json: ReviewSerializer.new(@reviews).serializable_hash[:data].map{|hash| hash[:attributes]}
+      else
+        render json: {
+          error: "not logged in", status: :unauthorized
+        }
+      end
 
     end
 

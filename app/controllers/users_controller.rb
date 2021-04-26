@@ -11,7 +11,6 @@ class UsersController < ApplicationController
             error: "not logged in", status: :unauthorized
           }
         end
-
     end 
 
     def create
